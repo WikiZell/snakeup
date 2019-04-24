@@ -3,18 +3,15 @@ class SnakeUp {
 
     canvasData = {
         canvas: document.getElementById("snakeup"),
-        context: document.getElementById("snakeup").getContext("2d")
-    
+        context: document.getElementById("snakeup").getContext("2d")   
     }
 
     playerData = {
         x : 320,
         y : 812,
-        speed: 50,
+        speed: 20,
         startingPoint:15      
     }
-
-    
 
     constructor() {
         this.playerCreate(this.playerData);
@@ -79,6 +76,11 @@ class SnakeUp {
   
   // Usage:
   let game = new SnakeUp();
+
+
+
+
+
   
     // Arrow keys
 
