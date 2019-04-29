@@ -26,8 +26,8 @@ class Core {
         
         this.player = new Player(this)
         this.hud = new Hud(this)
-        
-
+        this.animationFrameId = []
+        this.stopAnimation = false
         this.update();
     }
 
@@ -35,12 +35,16 @@ class Core {
         
         this.ctx.clearRect(0, 0, this.canvasProps.width, this.canvasProps.height);
         
-        
         this.draw(); //draw elements
         this.player.draw(this.ctx);
         this.hud.draw(this.ctx,"SCORE")
-
-        requestAnimationFrame(() => { this.update(); });
+        if(!this.stopAnimation) {
+          // alive
+          requestAnimationFrame(this.update.bind(this))
+        } else {
+          // game over
+          requestAnimationFrame(this.drawGameOver.bind(this))
+        }
       }
 
     generateRandomBlocks() {
@@ -55,8 +59,14 @@ class Core {
             }  else {
               console.log("ROW BLOCK !");
               let newBlock = new Block(this);
+              let randomGreen = Math.random() * (newBlock.xPosArr.length - 0) + 0;
               for (let i = 0; i <= newBlock.xPosArr.length; i++) {                
                 let newBlocks = new Block(this);
+                
+                if(randomGreen == i){
+                  newBlocks.points = this.player.points - 2
+                }               
+
                 newBlocks.y = -Math.abs(newBlocks.h);
                 newBlocks.x = newBlocks.xPosArr[i];
                 this.blocks.push(newBlocks);
@@ -121,19 +131,18 @@ class Core {
             //hit player: Block object remove / Player points decrease of block points / Score UP
             if(this.collisionCheck(this.player,element,"CircleSquare")){
                 console.log("User lose LIFE !!!")
-                this.player.points -= element.points;
+                
                 if(this.player.points > element.points){
                   this.score += element.points;
                 }
-                
+
+                this.player.points -= element.points;
+
                 console.log("SCORE:",this.score)
                 this.speedChange()
                 this.checkLife()        
                 return true;
             }
-
-            
-            
 
             break;
 
@@ -165,18 +174,20 @@ class Core {
 
     checkLife(){
       if(this.player.points <= 0){
-        this.player.points = 0;
+        //this.player.points = 0;
         this.endGame();
       }
     }
 
     endGame(){
       //window.requestAnimationFrame()
-      this.hud.draw(this.ctx,"GAMEOVER")
-      this.this.SpeedElement = 0
-      
-    }
 
+      this.stopAnimation = true  
+      this.drawGameOver()
+    }
+    drawGameOver() {
+        this.hud.draw(this.ctx,"GAMEOVER") 
+    }
     speedChange(){          
           
            if(this.SpeedElement < 12){

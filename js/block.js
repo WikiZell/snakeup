@@ -7,7 +7,7 @@ class Block {
         this.generateXYWH();
         
 
-        this.points = Math.floor(Math.random() * this.core.player.points + 5) + 1; //Points inside life
+        this.points = Math.floor(Math.random() * (this.core.player.points -2) + 5) + 1; //Points inside life
         this.speed = this.core.SpeedElement;
     }
 
